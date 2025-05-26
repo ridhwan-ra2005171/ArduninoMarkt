@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-bold text-lg mb-4">Arduino Shop</h3>
+            <h3 className="font-bold text-lg mb-4">CircuitNest</h3>
             <p className="text-gray-300 mb-4">
               Your one-stop shop for Arduino kits, parts, and project ideas.
             </p>
@@ -83,7 +83,7 @@ const Footer: React.FC = () => {
         </div>
         
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Arduino Shop. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} CircuitNest. All rights reserved.</p>
         </div>
       </div>
     </footer>

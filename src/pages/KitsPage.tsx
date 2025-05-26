@@ -23,67 +23,26 @@ const KitsPage: React.FC = () => {
   useEffect(() => {
     const fetchKits = async () => {
       try {
-        // In a real app, this would fetch from Supabase
-        // const { data, error } = await supabase.from('kits').select('*');
-        
-        // For now, we'll use mock data
-        const mockKits: Kit[] = [
-          {
-            id: 'starter-kit',
-            name: 'Arduino Starter Kit',
-            description: 'Everything you need to get started with Arduino. Includes Arduino Uno, breadboard, jumper wires, LEDs, resistors, and more.',
-            price: 49.99,
-            image_url: 'https://images.pexels.com/photos/2435963/pexels-photo-2435963.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            difficulty: 'Beginner',
-            tags: ['beginner', 'starter', 'complete']
-          },
-          {
-            id: 'iot-home-kit',
-            name: 'IoT Home Kit',
-            description: 'Build smart home devices with Arduino and WiFi. Includes Arduino with WiFi, sensors, relay modules, and project guide.',
-            price: 69.99,
-            image_url: 'https://images.pexels.com/photos/1432675/pexels-photo-1432675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            difficulty: 'Intermediate',
-            tags: ['iot', 'wifi', 'smart-home']
-          },
-          {
-            id: 'robotics-kit',
-            name: 'Robotics Kit',
-            description: 'Create your own robots with Arduino controllers. Includes motors, chassis, sensors, and complete build instructions.',
-            price: 89.99,
-            image_url: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            difficulty: 'Advanced',
-            tags: ['robotics', 'motors', 'advanced']
-          },
-          {
-            id: 'wearable-kit',
-            name: 'Wearable Tech Kit',
-            description: 'Includes LilyPad, flexible sensors, and more to get started with e-textiles and wearable electronics.',
-            price: 45.00,
-            image_url: 'https://images.pexels.com/photos/3825582/pexels-photo-3825582.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            difficulty: 'Beginner',
-            tags: ['wearable', 'e-textiles', 'lilypad']
-          },
-          {
-            id: 'music-kit',
-            name: 'Music & Sound Kit',
-            description: 'Create musical instruments and sound projects with Arduino. Includes speakers, buttons, and sensors.',
-            price: 39.99,
-            image_url: 'https://images.pexels.com/photos/2651794/pexels-photo-2651794.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            difficulty: 'Intermediate',
-            tags: ['music', 'sound', 'audio']
-          },
-          {
-            id: 'advanced-sensors-kit',
-            name: 'Advanced Sensors Kit',
-            description: 'Explore various environmental and physical sensors with this comprehensive kit for Arduino projects.',
-            price: 79.99,
-            image_url: 'https://images.pexels.com/photos/6894528/pexels-photo-6894528.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            difficulty: 'Advanced',
-            tags: ['sensors', 'environment', 'data']
-          }
-        ];
-        
+        // Change 'kits' to 'products'
+        const { data, error } = await supabase.from('products').select('*');
+
+        if (error) {
+          console.error('Error fetching kits:', error);
+          setError('Failed to load kits. Please try again later.');
+          setLoading(false);
+          return;
+        }
+
+        const mockKits: Kit[] = data.map((kit: any) => ({
+          id: kit.id,
+          name: kit.name,
+          description: kit.description,
+          price: kit.price,
+          image_url: kit.image_url,
+          difficulty: kit.difficulty,
+          tags: kit.tags
+        }));
+
         setKits(mockKits);
         setLoading(false);
       } catch (err) {
@@ -97,12 +56,12 @@ const KitsPage: React.FC = () => {
   }, []);
 
   const filteredKits = kits.filter(kit => {
-    const matchesSearch = kit.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         kit.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         kit.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
+    const matchesSearch = kit.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      kit.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      kit.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+
     const matchesDifficulty = difficultyFilter ? kit.difficulty.toLowerCase() === difficultyFilter.toLowerCase() : true;
-    
+
     return matchesSearch && matchesDifficulty;
   });
 
@@ -129,7 +88,7 @@ const KitsPage: React.FC = () => {
             className="pl-10 w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00979D]"
           />
         </div>
-        
+
         <div className="md:w-1/4">
           <select
             value={difficultyFilter || ''}
