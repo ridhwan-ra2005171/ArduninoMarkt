@@ -23,78 +23,28 @@ const PartsPage: React.FC = () => {
     const fetchParts = async () => {
       try {
         // In a real app, this would fetch from Supabase
-        // const { data, error } = await supabase.from('parts').select('*');
-        
-        // For now, we'll use mock data
-        const mockParts: Part[] = [
-          {
-            id: 'arduino-uno',
-            name: 'Arduino Uno Rev3',
-            description: 'The Arduino Uno is a microcontroller board based on the ATmega328P. It has 14 digital input/output pins, 6 analog inputs, a 16 MHz ceramic resonator, a USB connection, a power jack, an ICSP header and a reset button.',
-            price: 23.00,
-            image_url: 'https://images.pexels.com/photos/2086611/pexels-photo-2086611.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            category: 'Boards'
-          },
-          {
-            id: 'ultrasonic-sensor',
-            name: 'HC-SR04 Ultrasonic Sensor',
-            description: 'The HC-SR04 ultrasonic sensor uses sonar to determine distance to an object like bats do. It offers excellent non-contact range detection with high accuracy and stable readings.',
-            price: 3.95,
-            image_url: 'https://images.pexels.com/photos/8294608/pexels-photo-8294608.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            category: 'Sensors'
-          },
-          {
-            id: 'servo-motor',
-            name: 'Micro Servo Motor SG90',
-            description: 'Tiny and lightweight servo motor with high output power. Can rotate approximately 180 degrees (90 in each direction), and works just like standard servo motors but smaller.',
-            price: 4.50,
-            image_url: 'https://images.pexels.com/photos/4219653/pexels-photo-4219653.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            category: 'Components'
-          },
-          {
-            id: 'lcd-display',
-            name: '16x2 LCD Display',
-            description: 'This is a basic 16 character by 2 line display. Blue and white backlight with black text. Uses the HD44780 controller.',
-            price: 9.95,
-            image_url: 'https://images.pexels.com/photos/13812355/pexels-photo-13812355.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            category: 'Displays'
-          },
-          {
-            id: 'esp8266-wifi',
-            name: 'ESP8266 WiFi Module',
-            description: 'The ESP8266 WiFi Module is a self-contained SOC with integrated TCP/IP protocol stack that can give any microcontroller access to your WiFi network.',
-            price: 6.95,
-            image_url: 'https://images.pexels.com/photos/3512894/pexels-photo-3512894.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            category: 'Modules'
-          },
-          {
-            id: 'temperature-sensor',
-            name: 'DS18B20 Temperature Sensor',
-            description: 'Digital temperature sensor providing 9-bit to 12-bit Celsius temperature measurements. Communicates over a 1-Wire bus that requires only one data line for communication.',
-            price: 3.50,
-            image_url: 'https://images.pexels.com/photos/5730956/pexels-photo-5730956.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            category: 'Sensors'
-          },
-          {
-            id: 'relay-module',
-            name: '5V Relay Module',
-            description: 'This 5V Relay Module is a convenient board which can be used to control high voltage, high current loads such as motors, solenoids, lamps, AC loads.',
-            price: 2.99,
-            image_url: 'https://images.pexels.com/photos/3616765/pexels-photo-3616765.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            category: 'Modules'
-          },
-          {
-            id: 'bluetooth-module',
-            name: 'HC-05 Bluetooth Module',
-            description: 'HC-05 module is an easy to use Bluetooth SPP (Serial Port Protocol) module, designed for transparent wireless serial connection setup.',
-            price: 8.50,
-            image_url: 'https://images.pexels.com/photos/3491192/pexels-photo-3491192.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-            category: 'Modules'
-          }
-        ];
-        
-        setParts(mockParts);
+        const {data, error} = await supabase.from('components').select('*');
+
+        if (error) {
+          console.error('Error fetching parts:', error);
+          setError('Failed to load parts. Please try again later.');
+          setLoading(false);
+          return;
+        }
+
+        const mockParts: Part[] = data.map((part: any) => ({
+          id: part.id,
+          name: part.name,
+          description: part.description,
+          price: part.price,
+          image_url: part.image_url,
+          category: part.category
+        }));
+
+        setParts(mockParts);//will be used to display the parts
         setLoading(false);
+
+  
       } catch (err) {
         console.error('Error fetching parts:', err);
         setError('Failed to load parts. Please try again later.');
