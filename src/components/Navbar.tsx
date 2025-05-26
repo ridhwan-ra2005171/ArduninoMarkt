@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center">
-            <span className="font-bold text-xl text-[#00979D]">CircuitNest</span>
+            <span className="font-bold text-xl text-[#00979D]">Arduino Shop</span>
           </Link>
 
           {/* Desktop Navigation */}
