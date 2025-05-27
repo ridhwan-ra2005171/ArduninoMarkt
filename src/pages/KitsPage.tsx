@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import KitCard from '../components/KitCard';
 import { supabase } from '../lib/supabase';
-import { Search, Filter } from 'lucide-react';
+import { Search, ArrowUpDown } from 'lucide-react';
 
 interface Kit {
   id: string;
@@ -19,6 +19,7 @@ const KitsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<string>('name');
 
   useEffect(() => {
     const fetchKits = async () => {
@@ -63,6 +64,21 @@ const KitsPage: React.FC = () => {
     const matchesDifficulty = difficultyFilter ? kit.difficulty.toLowerCase() === difficultyFilter.toLowerCase() : true;
 
     return matchesSearch && matchesDifficulty;
+  }).sort((a, b) => {
+    switch (sortBy) {
+      case 'name':
+        return a.name.localeCompare(b.name);
+      case 'price-low':
+        return a.price - b.price;
+      case 'price-high':
+        return b.price - a.price;
+      case 'difficulty':
+        const difficultyOrder = { 'Beginner': 1, 'Intermediate': 2, 'Advanced': 3 };
+        return (difficultyOrder[a.difficulty as keyof typeof difficultyOrder] || 0) - 
+               (difficultyOrder[b.difficulty as keyof typeof difficultyOrder] || 0);
+      default:
+        return 0;
+    }
   });
 
   return (
@@ -74,7 +90,7 @@ const KitsPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Search and Filter */}
+      {/* Search and Filter Section */}
       <div className="mb-8 flex flex-col md:flex-row gap-4">
         <div className="relative flex-grow">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -89,6 +105,7 @@ const KitsPage: React.FC = () => {
           />
         </div>
 
+        {/* Difficulty filter */}
         <div className="md:w-1/4">
           <select
             value={difficultyFilter || ''}
@@ -99,6 +116,23 @@ const KitsPage: React.FC = () => {
             <option value="Beginner">Beginner</option>
             <option value="Intermediate">Intermediate</option>
             <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+
+        {/* Sort dropdown */}
+        <div className="relative md:w-40">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <ArrowUpDown size={16} className="text-gray-400" />
+          </div>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="pl-9 w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00979D] appearance-none bg-white text-sm"
+          >
+            <option value="name">Name</option>
+            <option value="price-low">Price: Low-High</option>
+            <option value="price-high">Price: High-Low</option>
+            <option value="difficulty">Difficulty</option>
           </select>
         </div>
       </div>

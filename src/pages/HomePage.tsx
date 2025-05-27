@@ -120,11 +120,11 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Latest Projects */}
+      {/* Featured Projects */}
       <section className="bg-gray-50 py-16 rounded-xl">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-8">
-            <h2 className="text-3xl font-bold text-gray-800">Latest Projects</h2>
+            <h2 className="text-3xl font-bold text-gray-800">Featured Projects</h2>
             <Link 
               to="/projects" 
               className="text-[#00979D] font-medium hover:underline flex items-center"
