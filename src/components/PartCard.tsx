@@ -67,23 +67,23 @@ const PartCard: React.FC<PartCardProps> = ({
           </span>
         </div>
         <Link to={`/parts/${id}`}>
-          <h3 className="text-xl font-bold mb-2 text-gray-800 hover:text-[#00979D] transition-colors">
+          <h3 className="text-xl font-bold mb-2 text-gray-800 hover:text-[#00979D] transition-colors line-clamp-2">
             {name}
           </h3>
         </Link>
-        <p className="text-gray-600 mb-4 line-clamp-2">{description}</p>
-        <div className="flex justify-between items-center">
+        <p className="contents text-gray-600 mb-4 line-clamp-2">{description}</p>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
           <span className="text-lg font-bold text-gray-800">${price.toFixed(2)}</span>
           <div className="flex space-x-2">
             <Link 
               to={`/parts/${id}`} 
-              className="text-[#00979D] border border-[#00979D] px-3 py-1 rounded hover:bg-[#00979D] hover:text-white transition-colors"
+              className="text-[#00979D] border border-[#00979D] px-3 py-1 rounded hover:bg-[#00979D] hover:text-white transition-colors flex-1 sm:flex-initial"
             >
               Details
             </Link>
             <button
               onClick={handleAddToCart}
-              className="bg-[#00979D] text-white px-3 py-1 rounded hover:bg-[#007A7A] transition-colors flex items-center"
+              className="bg-[#00979D] text-white px-3 py-1 rounded hover:bg-[#007A7A] transition-colors flex items-center justify-center flex-1 sm:flex-initial"
             >
               <ShoppingCart size={16} className="mr-1" />
               Add
