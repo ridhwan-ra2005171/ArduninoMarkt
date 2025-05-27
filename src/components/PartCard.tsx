@@ -52,11 +52,13 @@ const PartCard: React.FC<PartCardProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
       <Link to={`/parts/${id}`}>
-        <img 
-          src={image} 
-          alt={name} 
-          className="w-full h-48 object-cover"
-        />
+        <div className="relative pt-[40%] w-[50%] mx-auto mt-4">
+          <img 
+            src={image} 
+            alt={name} 
+            className="absolute inset-0 w-full h-full object-contain bg-white"
+          />
+        </div>
       </Link>
       <div className="p-6">
         <div className="flex items-center mb-2">
