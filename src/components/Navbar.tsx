@@ -7,7 +7,7 @@ import { useCart } from '../context/CartContext';
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { user, signOut } = useAuth();
-  const { cartItems } = useCart();
+  const { cartItems, getTotalQuantity } = useCart();
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -41,13 +41,14 @@ const Navbar: React.FC = () => {
           </nav>
 
           {/* User Actions */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="flex items-center space-x-4">
             <Link to="/cart" className="text-gray-700 hover:text-[#00979D] relative">
               <ShoppingCart size={24} />
               {cartItems.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#00979D] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {cartItems.length}
+                  {getTotalQuantity()} 
                 </span>
+                //used this because cartItems.length only takes unique
               )}
             </Link>
             
@@ -112,33 +113,8 @@ const Navbar: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <ShoppingCart size={20} className="mr-2" />
-                Cart {cartItems.length > 0 && `(${cartItems.length})`}
+                Cart {cartItems.length > 0 && `(${getTotalQuantity()})`}
               </Link>
-              {user ? (
-                <>
-                  <Link 
-                    to="/profile" 
-                    className="text-gray-700 hover:text-[#00979D]"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="text-left text-gray-700 hover:text-[#00979D]"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <Link 
-                  to="/login" 
-                  className="text-gray-700 hover:text-[#00979D]"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign In
-                </Link>
-              )}
             </nav>
           </div>
         )}
