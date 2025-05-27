@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ShoppingCart, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import ImageMagnifier from '../components/ImageMagnifier';
 
 interface Part {
   id: string;
@@ -107,11 +108,15 @@ const PartDetailPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Image Section */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <img
+        <div className="bg-white rounded-lg shadow-md overflow-hidden flex items-center justify-center">
+          <ImageMagnifier
             src={part.image_url}
             alt={part.name}
-            className="w-full h-96 object-cover"
+            width="100%"
+            height="24rem"
+            magnifierHeight={250}
+            magnifierWidth={250}
+            zoomLevel={1}
           />
         </div>
 
