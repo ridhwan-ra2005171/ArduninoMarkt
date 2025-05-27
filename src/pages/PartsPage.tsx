@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PartCard from '../components/PartCard';
 import { supabase } from '../lib/supabase';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, ArrowUpDown } from 'lucide-react';
 
 interface Part {
   id: string;
@@ -18,6 +18,7 @@ const PartsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<string>('name');
 
   useEffect(() => {
     const fetchParts = async () => {
@@ -62,6 +63,17 @@ const PartsPage: React.FC = () => {
     const matchesCategory = categoryFilter ? part.category.toLowerCase() === categoryFilter.toLowerCase() : true;
     
     return matchesSearch && matchesCategory;
+  }).sort((a, b) => {
+    switch (sortBy) {
+      case 'name':
+        return a.name.localeCompare(b.name);
+      case 'price-low':
+        return a.price - b.price;
+      case 'price-high':
+        return b.price - a.price;
+      default:
+        return 0;
+    }
   });
 
   const categories = [...new Set(parts.map(part => part.category))];
@@ -102,7 +114,25 @@ const PartsPage: React.FC = () => {
             ))}
           </select>
         </div>
+
+        {/* Sort dropdown */}
+        <div className="relative md:w-40">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <ArrowUpDown size={16} className="text-gray-400" />
+          </div>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="pl-9 w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00979D] appearance-none bg-white text-sm"
+          >
+            <option value="name">Name</option>
+            <option value="price-low">Price: Low-High</option>
+            <option value="price-high">Price: High-Low</option>
+          </select>
+        </div>
       </div>
+
+      
 
       {loading ? (
         <div className="flex justify-center items-center h-64">
