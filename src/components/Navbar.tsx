@@ -23,7 +23,12 @@ const Navbar: React.FC = () => {
     <header className="bg-white shadow-sm sticky top-0 z-10">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center">
+          {/* Mobile Menu Button */}
+          <button className="block md:hidden" onClick={toggleMenu}>
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
+          <Link to="/" className="flex items-center md:flex-none">
             <span className="font-bold text-xl text-[#00979D]">CircuitNest</span>
           </Link>
 
@@ -48,12 +53,12 @@ const Navbar: React.FC = () => {
                 <span className="absolute -top-2 -right-2 bg-[#00979D] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {getTotalQuantity()} 
                 </span>
-                //used this because cartItems.length only takes unique
               )}
             </Link>
             
+            {/* Desktop User Menu */}
             {user ? (
-              <div className="relative group">
+              <div className="relative group hidden md:block">
                 <button className="flex items-center text-gray-700 hover:text-[#00979D]">
                   <User size={24} />
                 </button>
@@ -70,16 +75,11 @@ const Navbar: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <Link to="/login" className="text-gray-700 hover:text-[#00979D]">
+              <Link to="/login" className="text-gray-700 hover:text-[#00979D] hidden md:block">
                 Sign In
               </Link>
             )}
           </div>
-
-          {/* Mobile Menu Button */}
-          <button className="md:hidden" onClick={toggleMenu}>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
 
         {/* Mobile Menu */}
@@ -107,14 +107,37 @@ const Navbar: React.FC = () => {
               >
                 Projects
               </Link>
-              <Link 
-                to="/cart" 
-                className="text-gray-700 hover:text-[#00979D] flex items-center"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <ShoppingCart size={20} className="mr-2" />
-                Cart {cartItems.length > 0 && `(${getTotalQuantity()})`}
-              </Link>
+              
+              {user ? (
+                <>
+                  <Link 
+                    to="/profile" 
+                    className="text-gray-700 hover:text-[#00979D] flex items-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <User size={20} className="mr-2" />
+                    Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-gray-700 hover:text-[#00979D] flex items-center"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <Link 
+                  to="/login" 
+                  className="text-gray-700 hover:text-[#00979D] flex items-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <User size={20} className="mr-2" />
+                  Sign In
+                </Link>
+              )}
             </nav>
           </div>
         )}
