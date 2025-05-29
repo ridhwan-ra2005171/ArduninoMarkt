@@ -71,8 +71,8 @@ const Footer: React.FC = () => {
             <h3 className="font-bold text-lg mb-4">Contact</h3>
             <p className="text-gray-300 mb-2 flex items-center">
               <Mail size={16} className="mr-2" />
-              <a href="mailto:info@arduinoshop.com" className="hover:text-white transition-colors">
-                info@arduinoshop.com
+              <a href="mailto:ridhwanathaullah18@gmail.com" className="hover:text-white transition-colors">
+                ridhwanathaullah18@gmail.com
               </a>
             </p>
             <p className="text-gray-300">
@@ -83,7 +83,7 @@ const Footer: React.FC = () => {
         </div>
         
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} CircuitNest. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} CircuitNest. RidhwanAthaullah All rights reserved.</p>
         </div>
       </div>
     </footer>

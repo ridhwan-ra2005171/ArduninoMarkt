@@ -11,6 +11,7 @@ interface Kit {
   image_url: string;
   difficulty: string;
   tags: string[];
+  included_components: string;
 }
 
 const KitDetailPage = () => {
@@ -130,6 +131,22 @@ const KitDetailPage = () => {
                   ))}
                 </div>
               </div>
+
+              {kit.included_components && (
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold mb-3">What's Included:</h3>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <ul className="space-y-2">
+                      {kit.included_components.split('\n').map((component, index) => (
+                        <li key={index} className="flex items-start">
+                          <div className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#00979D]" />
+                          <span className="ml-3 text-gray-700">{component}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
             </div>
             
             <button className="w-full bg-[#00979D] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#007A7A] transition-colors duration-200">
