@@ -12,13 +12,13 @@ interface PartCardProps {
   category: string;
 }
 
-const PartCard: React.FC<PartCardProps> = ({ 
-  id, 
-  name, 
-  description, 
-  price, 
-  image, 
-  category 
+const PartCard: React.FC<PartCardProps> = ({
+  id,
+  name,
+  description,
+  price,
+  image,
+  category
 }) => {
   const { addToCart } = useCart();
 
@@ -33,7 +33,7 @@ const PartCard: React.FC<PartCardProps> = ({
   };
 
   const getCategoryColor = (category: string) => {
-    switch(category.toLowerCase()) {
+    switch (category.toLowerCase()) {
       case 'boards':
         return 'bg-purple-100 text-purple-800';
       case 'sensors':
@@ -51,43 +51,47 @@ const PartCard: React.FC<PartCardProps> = ({
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-      <Link to={`/parts/${id}`}>
-        <div className="relative pt-[40%] w-[50%] mx-auto mt-4">
-          <img 
-            src={image} 
-            alt={name} 
-            className="absolute inset-0 w-full h-full object-contain bg-white"
-          />
-        </div>
-      </Link>
-      <div className="p-6">
-        <div className="flex items-center mb-2">
-          <span className={`text-xs px-2 py-1 rounded ${getCategoryColor(category)}`}>
-            {category}
-          </span>
-        </div>
+      <div className="flex flex-col h-full">
         <Link to={`/parts/${id}`}>
-          <h3 className="text-xl font-bold mb-2 text-gray-800 hover:text-[#00979D] transition-colors line-clamp-2">
-            {name}
-          </h3>
+          <div className="relative pt-[40%] w-[50%] mx-auto mt-4">
+            <img
+              src={image}
+              alt={name}
+              className="absolute inset-0 w-full h-full object-contain bg-white"
+            />
+          </div>
         </Link>
-        <p className="contents text-gray-600 mb-4 line-clamp-2">{description}</p>
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-          <span className="text-lg font-bold text-gray-800">${price.toFixed(2)}</span>
-          <div className="flex space-x-2">
-            <Link 
-              to={`/parts/${id}`} 
-              className="text-[#00979D] border border-[#00979D] px-3 py-1 rounded hover:bg-[#00979D] hover:text-white transition-colors flex-1 sm:flex-initial"
-            >
-              Details
-            </Link>
-            <button
-              onClick={handleAddToCart}
-              className="bg-[#00979D] text-white px-3 py-1 rounded hover:bg-[#007A7A] transition-colors flex items-center justify-center flex-1 sm:flex-initial"
-            >
-              <ShoppingCart size={16} className="mr-1" />
-              Add
-            </button>
+        <div className="p-6 flex flex-col flex-grow">
+          <div className="flex items-center mb-2">
+            <span className={`text-xs px-2 py-1 rounded ${getCategoryColor(category)}`}>
+              {category}
+            </span>
+          </div>
+          <Link to={`/parts/${id}`}>
+            <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-gray-800 hover:text-[#00979D] transition-colors line-clamp-2">
+              {name}
+            </h3>
+          </Link>
+          <p className="hidden sm:line-clamp-2 block text-gray-600 mb-4">{description}</p>
+          <div className="mt-auto">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+              <span className="text-base sm:text-lg md:text-xl font-bold text-gray-800 hover:text-[#00979D] transition-colors">${price.toFixed(2)}</span>
+              <div className="flex space-x-2">
+                <Link
+                  to={`/parts/${id}`}
+                  className="text-[#00979D] border border-[#00979D] px-3 py-1 rounded hover:bg-[#00979D] hover:text-white transition-colors flex-1 sm:flex-initial"
+                >
+                  Details
+                </Link>
+                <button
+                  onClick={handleAddToCart}
+                  className="bg-[#00979D] text-white px-3 py-1 rounded hover:bg-[#007A7A] transition-colors flex items-center justify-center flex-1 sm:flex-initial"
+                >
+                  <ShoppingCart size={16} className="mr-1" />
+                  Add
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
