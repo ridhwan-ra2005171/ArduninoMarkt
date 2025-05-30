@@ -1,8 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+
+interface Kit {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image_url: string;
+}
 
 const HomePage: React.FC = () => {
+  const [featuredKits, setFeaturedKits] = useState<Kit[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedKits = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .limit(3)
+          .order('id', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching featured kits:', error);
+          return;
+        }
+
+        setFeaturedKits(data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching featured kits:', err);
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedKits();
+  }, []);
+
   return (
     <div className="space-y-16">
       {/* Hero Section */}
@@ -53,69 +90,34 @@ const HomePage: React.FC = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* These would be populated from your API/database */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <img 
-                src="https://images.pexels.com/photos/2435963/pexels-photo-2435963.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                alt="Arduino Starter Kit" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-gray-800">Arduino Starter Kit</h3>
-                <p className="text-gray-600 mb-4">Everything you need to get started with Arduino.</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-gray-800">$49.99</span>
-                  <Link 
-                    to="/kits/starter-kit" 
-                    className="bg-[#00979D] text-white px-4 py-2 rounded hover:bg-[#007A7A] transition-colors"
-                  >
-                    View Kit
-                  </Link>
-                </div>
+            {loading ? (
+              <div className="col-span-3 flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00979D]"></div>
               </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <img 
-                src="https://images.pexels.com/photos/1432675/pexels-photo-1432675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                alt="IoT Home Kit" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-gray-800">IoT Home Kit</h3>
-                <p className="text-gray-600 mb-4">Build smart home devices with Arduino and WiFi.</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-gray-800">$69.99</span>
-                  <Link 
-                    to="/kits/iot-home-kit" 
-                    className="bg-[#00979D] text-white px-4 py-2 rounded hover:bg-[#007A7A] transition-colors"
-                  >
-                    View Kit
-                  </Link>
+            ) : (
+              featuredKits.map((kit) => (
+                <div key={kit.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                  <img 
+                    src={kit.image_url} 
+                    alt={kit.name} 
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2 text-gray-800">{kit.name}</h3>
+                    <p className="text-gray-600 mb-4">{kit.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-gray-800">${kit.price.toFixed(2)}</span>
+                      <Link 
+                        to={`/kits/${kit.id}`}
+                        className="bg-[#00979D] text-white px-4 py-2 rounded hover:bg-[#007A7A] transition-colors"
+                      >
+                        View Kit
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <img 
-                src="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                alt="Robotics Kit" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-gray-800">Robotics Kit</h3>
-                <p className="text-gray-600 mb-4">Create your own robots with Arduino controllers.</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-gray-800">$89.99</span>
-                  <Link 
-                    to="/kits/robotics-kit" 
-                    className="bg-[#00979D] text-white px-4 py-2 rounded hover:bg-[#007A7A] transition-colors"
-                  >
-                    View Kit
-                  </Link>
-                </div>
-              </div>
-            </div>
+              ))
+            )}
           </div>
         </div>
       </section>

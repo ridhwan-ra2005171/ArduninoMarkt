@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
+import ImageMagnifier from '../components/ImageMagnifier';
 
 interface Kit {
   id: string;
@@ -20,6 +21,7 @@ const KitDetailPage = () => {
   const [kit, setKit] = useState<Kit | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isComponentsExpanded, setIsComponentsExpanded] = useState(false);
 
   useEffect(() => {
     const fetchKitDetails = async () => {
@@ -90,13 +92,17 @@ const KitDetailPage = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Image Section */}
-          <div className="relative">
-            <img
+          <div className="bg-white rounded-lg shadow-md overflow-hidden flex items-center justify-center">
+            <ImageMagnifier
               src={kit.image_url}
               alt={kit.name}
-              className="w-full h-[400px] object-cover rounded-lg shadow-lg"
+              width="100%"
+              height="100%"
+              magnifierHeight={250}
+              magnifierWidth={250}
+              zoomLevel={1}
             />
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-4 right-4 z-10">
               <span className={`
                 px-4 py-2 rounded-full text-sm font-semibold
                 ${kit.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
@@ -134,16 +140,32 @@ const KitDetailPage = () => {
 
               {kit.included_components && (
                 <div className="mb-8">
-                  <h3 className="text-lg font-semibold mb-3">What's Included:</h3>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <ul className="space-y-2">
-                      {kit.included_components.split('\n').map((component, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#00979D]" />
-                          <span className="ml-3 text-gray-700">{component}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <button
+                    onClick={() => setIsComponentsExpanded(!isComponentsExpanded)}
+                    className="flex items-center justify-between w-full text-left bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
+                  >
+                    <h3 className="text-lg font-semibold">What's Included:</h3>
+                    <ChevronDown 
+                      className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                        isComponentsExpanded ? 'transform rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  <div 
+                    className={`transition-all duration-200 overflow-hidden ${
+                      isComponentsExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className="bg-gray-50 rounded-lg p-4 mt-2">
+                      <ul className="space-y-2">
+                        {kit.included_components.split('\n').map((component, index) => (
+                          <li key={index} className="flex items-start">
+                            <div className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#00979D]" />
+                            <span className="ml-3 text-gray-700">{component}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               )}
