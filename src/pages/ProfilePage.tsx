@@ -87,9 +87,7 @@ const ProfilePage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4 bg-gray-50 border-b">
               <div className="flex items-center">
-                <div className="bg-[#00979D] text-white rounded-full w-10 h-10 flex items-center justify-center">
-                  <span className="font-bold">{user.email?.charAt(0).toUpperCase()}</span>
-                </div>
+
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-900 truncate">
                     {user.email}
@@ -100,33 +98,30 @@ const ProfilePage: React.FC = () => {
             <nav className="p-2">
               <button
                 onClick={() => setActiveTab('profile')}
-                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-                  activeTab === 'profile'
+                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${activeTab === 'profile'
                     ? 'bg-[#00979D] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <User size={18} className="mr-2" />
                 Profile
               </button>
               <button
                 onClick={() => setActiveTab('orders')}
-                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-                  activeTab === 'orders'
+                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${activeTab === 'orders'
                     ? 'bg-[#00979D] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <ShoppingBag size={18} className="mr-2" />
                 Order History
               </button>
               <button
                 onClick={() => setActiveTab('payment')}
-                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-                  activeTab === 'payment'
+                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${activeTab === 'payment'
                     ? 'bg-[#00979D] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 <CreditCard size={18} className="mr-2" />
                 Payment Methods
@@ -203,7 +198,7 @@ const ProfilePage: React.FC = () => {
             {activeTab === 'orders' && (
               <div>
                 <h2 className="text-xl font-semibold mb-6">Order History</h2>
-                
+
                 {orders.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -251,7 +246,7 @@ const ProfilePage: React.FC = () => {
             {activeTab === 'payment' && (
               <div>
                 <h2 className="text-xl font-semibold mb-6">Payment Methods</h2>
-                
+
                 <div className="text-center py-8">
                   <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                     <CreditCard size={24} className="text-gray-400" />
