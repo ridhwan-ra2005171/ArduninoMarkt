@@ -1,7 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+// Custom styles for Slick carousel dots
+const customDotStyles = `
+  .project-carousel .slick-dots {
+    bottom: -40px;
+  }
+  .project-carousel .slick-dots li {
+    width: 12px;
+    height: 12px;
+    margin: 0 6px;
+  }
+  .project-carousel .slick-dots li button {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+  }
+  .project-carousel .slick-dots li button:before {
+    width: 12px;
+    height: 12px;
+    font-size: 12px;
+    color: #CBD5E1;
+    opacity: 1;
+  }
+  .project-carousel .slick-dots li.slick-active button:before {
+    color: #00979D;
+    opacity: 1;
+  }
+`;
 
 interface Kit {
   id: string;
@@ -14,6 +45,27 @@ interface Kit {
 const HomePage: React.FC = () => {
   const [featuredKits, setFeaturedKits] = useState<Kit[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Custom arrow components
+  const NextArrow = ({ onClick }: { onClick?: () => void }) => (
+    <button
+      onClick={onClick}
+      className="absolute right-0 top-1/2 -translate-y-1/2 z-10  hover:scale-110 -mr-5"
+      aria-label="Next slide"
+    >
+      <ChevronRight className="w-9 h-9 text-[#00979D]" />
+    </button>
+  );
+
+  const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
+    <button
+      onClick={onClick}
+      className="absolute left-0 top-1/2 -translate-y-1/2 z-10  hover:scale-110 -ml-5"
+      aria-label="Previous slide"
+    >
+      <ChevronLeft className="w-9 h-9 text-[#00979D]" />
+    </button>
+  );
 
   useEffect(() => {
     const fetchFeaturedKits = async () => {
@@ -42,6 +94,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="space-y-16">
+      <style>{customDotStyles}</style>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl overflow-hidden">
         <div className="container mx-auto px-4 py-16 md:py-24">
@@ -136,56 +189,163 @@ const HomePage: React.FC = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
-              <img 
-                src="https://images.pexels.com/photos/163100/circuit-circuit-board-resistor-computer-163100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                alt="LED Light Show" 
-                className="w-full md:w-1/3 h-48 md:h-auto object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-gray-800">LED Light Show</h3>
-                <p className="text-gray-600 mb-4">
-                  Create an amazing light display synchronized to music using Arduino and LEDs.
-                </p>
-                <div className="flex items-center text-sm text-gray-500 mb-4">
-                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">Beginner</span>
-                  <span>Estimated time: 2 hours</span>
+          <div className="px-6">
+            <Slider
+              dots={true}
+              infinite={true}
+              speed={500}
+              slidesToShow={2}
+              slidesToScroll={1}
+              autoplay={true}
+              autoplaySpeed={5000}
+              nextArrow={<NextArrow />}
+              prevArrow={<PrevArrow />}
+              responsive={[
+                {
+                  breakpoint: 768,
+                  settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                  }
+                }
+              ]}
+              className="project-carousel -mx-4"
+            >
+              <div className="px-4">
+                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
+                  <img 
+                    src="https://images.pexels.com/photos/163100/circuit-circuit-board-resistor-computer-163100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                    alt="LED Light Show" 
+                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2 text-gray-800">LED Light Show</h3>
+                    <p className="text-gray-600 mb-4">
+                      Create an amazing light display synchronized to music using Arduino and LEDs.
+                    </p>
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">Beginner</span>
+                      <span>Estimated time: 2 hours</span>
+                    </div>
+                    <Link 
+                      to="/projects/led-light-show" 
+                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
+                    >
+                      Learn more
+                      <ArrowRight size={16} className="ml-1" />
+                    </Link>
+                  </div>
                 </div>
-                <Link 
-                  to="/projects/led-light-show" 
-                  className="text-[#00979D] font-medium hover:underline inline-flex items-center"
-                >
-                  Learn more
-                  <ArrowRight size={16} className="ml-1" />
-                </Link>
               </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
-              <img 
-                src="https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                alt="Smart Thermostat" 
-                className="w-full md:w-1/3 h-48 md:h-auto object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-gray-800">Smart Thermostat</h3>
-                <p className="text-gray-600 mb-4">
-                  Build your own WiFi-connected thermostat to control your home temperature.
-                </p>
-                <div className="flex items-center text-sm text-gray-500 mb-4">
-                  <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded mr-2">Intermediate</span>
-                  <span>Estimated time: 4 hours</span>
+
+              <div className="px-4">
+                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
+                  <img 
+                    src="https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                    alt="Smart Thermostat" 
+                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2 text-gray-800">Smart Thermostat</h3>
+                    <p className="text-gray-600 mb-4">
+                      Build your own WiFi-connected thermostat to control your home temperature.
+                    </p>
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded mr-2">Intermediate</span>
+                      <span>Estimated time: 4 hours</span>
+                    </div>
+                    <Link 
+                      to="/projects/smart-thermostat" 
+                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
+                    >
+                      Learn more
+                      <ArrowRight size={16} className="ml-1" />
+                    </Link>
+                  </div>
                 </div>
-                <Link 
-                  to="/projects/smart-thermostat" 
-                  className="text-[#00979D] font-medium hover:underline inline-flex items-center"
-                >
-                  Learn more
-                  <ArrowRight size={16} className="ml-1" />
-                </Link>
               </div>
-            </div>
+
+              <div className="px-4">
+                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
+                  <img 
+                    src="https://images.pexels.com/photos/1472443/pexels-photo-1472443.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                    alt="Weather Station" 
+                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2 text-gray-800">Weather Station</h3>
+                    <p className="text-gray-600 mb-4">
+                      Create your own IoT weather station that monitors temperature, humidity, and pressure.
+                    </p>
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded mr-2">Intermediate</span>
+                      <span>Estimated time: 5 hours</span>
+                    </div>
+                    <Link 
+                      to="/projects/weather-station" 
+                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
+                    >
+                      Learn more
+                      <ArrowRight size={16} className="ml-1" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-4">
+                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
+                  <img 
+                    src="https://images.pexels.com/photos/8566472/pexels-photo-8566472.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                    alt="Plant Monitor" 
+                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2 text-gray-800">Smart Plant Monitor</h3>
+                    <p className="text-gray-600 mb-4">
+                      Build an automated plant monitoring system that tracks soil moisture and sunlight.
+                    </p>
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">Beginner</span>
+                      <span>Estimated time: 3 hours</span>
+                    </div>
+                    <Link 
+                      to="/projects/plant-monitor" 
+                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
+                    >
+                      Learn more
+                      <ArrowRight size={16} className="ml-1" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-4">
+                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
+                  <img 
+                    src="https://images.pexels.com/photos/8566537/pexels-photo-8566537.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                    alt="Home Security" 
+                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2 text-gray-800">Smart Security System</h3>
+                    <p className="text-gray-600 mb-4">
+                      Develop a DIY home security system with motion detection and mobile notifications.
+                    </p>
+                    <div className="flex items-center text-sm text-gray-500 mb-4">
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded mr-2">Advanced</span>
+                      <span>Estimated time: 8 hours</span>
+                    </div>
+                    <Link 
+                      to="/projects/security-system" 
+                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
+                    >
+                      Learn more
+                      <ArrowRight size={16} className="ml-1" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </Slider>
           </div>
         </div>
       </section>
