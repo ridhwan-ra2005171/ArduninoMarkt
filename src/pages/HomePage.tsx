@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -45,6 +45,11 @@ interface Kit {
 const HomePage: React.FC = () => {
   const [featuredKits, setFeaturedKits] = useState<Kit[]>([]);
   const [loading, setLoading] = useState(true);
+  const featuredProjectsRef = useRef<HTMLElement>(null);
+
+  const scrollToFeaturedProjects = () => {
+    featuredProjectsRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   // Custom arrow components
   const NextArrow = ({ onClick }: { onClick?: () => void }) => (
@@ -113,12 +118,12 @@ const HomePage: React.FC = () => {
               >
                 Explore Starter Kits
               </Link>
-              <Link
-                to="/projects"
+              <button
+                onClick={scrollToFeaturedProjects}
                 className="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-10 transition-all"
               >
                 Browse Projects
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -176,7 +181,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Featured Projects */}
-      <section className="bg-gray-50 py-16 rounded-xl">
+      <section ref={featuredProjectsRef} className="bg-gray-50 py-16 rounded-xl">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-8">
             <h2 className="text-3xl font-bold text-gray-800">Featured Projects</h2>

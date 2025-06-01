@@ -29,6 +29,7 @@ const Navbar: React.FC = () => {
           </button>
 
           <Link to="/" className="flex items-center md:flex-none">
+            <img src="/CircuitNest.svg" alt="CircuitNest Logo" className="h-8 w-8 mr-2" />
             <span className="font-bold text-xl text-[#00979D]">CircuitNest</span>
           </Link>
 
