@@ -42,9 +42,21 @@ interface Kit {
   image_url: string;
 }
 
+interface Project {
+  projectid: string;
+  name: string;
+  description: string;
+  difficulty: string;
+  duration: string;
+  detailed_description: string;
+  image_url: string;
+}
+
 const HomePage: React.FC = () => {
   const [featuredKits, setFeaturedKits] = useState<Kit[]>([]);
+  const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [projectsLoading, setProjectsLoading] = useState(true);
   const featuredProjectsRef = useRef<HTMLElement>(null);
 
   const scrollToFeaturedProjects = () => {
@@ -95,6 +107,31 @@ const HomePage: React.FC = () => {
     };
 
     fetchFeaturedKits();
+  }, []);
+
+  useEffect(() => {
+    const fetchFeaturedProjects = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .order('projectid', { ascending: false })
+          .limit(5);
+
+        if (error) {
+          console.error('Error fetching featured projects:', error);
+          return;
+        }
+
+        setFeaturedProjects(data);
+        setProjectsLoading(false);
+      } catch (err) {
+        console.error('Error fetching featured projects:', err);
+        setProjectsLoading(false);
+      }
+    };
+
+    fetchFeaturedProjects();
   }, []);
 
   return (
@@ -195,162 +232,69 @@ const HomePage: React.FC = () => {
           </div>
           
           <div className="px-6">
-            <Slider
-              dots={true}
-              infinite={true}
-              speed={500}
-              slidesToShow={2}
-              slidesToScroll={1}
-              autoplay={true}
-              autoplaySpeed={5000}
-              nextArrow={<NextArrow />}
-              prevArrow={<PrevArrow />}
-              responsive={[
-                {
-                  breakpoint: 768,
-                  settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
+            {projectsLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00979D]"></div>
+              </div>
+            ) : (
+              <Slider
+                dots={true}
+                infinite={true}
+                speed={500}
+                slidesToShow={2}
+                slidesToScroll={1}
+                autoplay={true}
+                autoplaySpeed={5000}
+                nextArrow={<NextArrow />}
+                prevArrow={<PrevArrow />}
+                responsive={[
+                  {
+                    breakpoint: 768,
+                    settings: {
+                      slidesToShow: 1,
+                      slidesToScroll: 1
+                    }
                   }
-                }
-              ]}
-              className="project-carousel -mx-4"
-            >
-              <div className="px-4">
-                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
-                  <img 
-                    src="https://images.pexels.com/photos/163100/circuit-circuit-board-resistor-computer-163100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                    alt="LED Light Show" 
-                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">LED Light Show</h3>
-                    <p className="text-gray-600 mb-4">
-                      Create an amazing light display synchronized to music using Arduino and LEDs.
-                    </p>
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">Beginner</span>
-                      <span>Estimated time: 2 hours</span>
+                ]}
+                className="project-carousel -mx-4"
+              >
+                {featuredProjects.map((project) => (
+                  <div key={project.projectid} className="px-4">
+                    <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
+                      <img 
+                        src={project.image_url} 
+                        alt={project.name} 
+                        className="w-full md:w-1/3 h-48 md:h-auto object-cover"
+                      />
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold mb-2 text-gray-800">{project.name}</h3>
+                        <p className="text-gray-600 mb-4">
+                          {project.description}
+                        </p>
+                        <div className="flex items-center text-sm text-gray-500 mb-4">
+                          <span className={`
+                            px-2 py-1 rounded mr-2
+                            ${project.difficulty === 'Beginner' ? 'bg-blue-100 text-blue-800' : ''}
+                            ${project.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' : ''}
+                            ${project.difficulty === 'Advanced' ? 'bg-red-100 text-red-800' : ''}
+                          `}>
+                            {project.difficulty}
+                          </span>
+                          <span>Estimated time: {project.duration}</span>
+                        </div>
+                        <Link 
+                          to={`/projects/${project.projectid}`}
+                          className="text-[#00979D] font-medium hover:underline inline-flex items-center"
+                        >
+                          Learn more
+                          <ArrowRight size={16} className="ml-1" />
+                        </Link>
+                      </div>
                     </div>
-                    <Link 
-                      to="/projects/led-light-show" 
-                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
-                    >
-                      Learn more
-                      <ArrowRight size={16} className="ml-1" />
-                    </Link>
                   </div>
-                </div>
-              </div>
-
-              <div className="px-4">
-                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
-                  <img 
-                    src="https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                    alt="Smart Thermostat" 
-                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">Smart Thermostat</h3>
-                    <p className="text-gray-600 mb-4">
-                      Build your own WiFi-connected thermostat to control your home temperature.
-                    </p>
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded mr-2">Intermediate</span>
-                      <span>Estimated time: 4 hours</span>
-                    </div>
-                    <Link 
-                      to="/projects/smart-thermostat" 
-                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
-                    >
-                      Learn more
-                      <ArrowRight size={16} className="ml-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-4">
-                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
-                  <img 
-                    src="https://images.pexels.com/photos/1472443/pexels-photo-1472443.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                    alt="Weather Station" 
-                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">Weather Station</h3>
-                    <p className="text-gray-600 mb-4">
-                      Create your own IoT weather station that monitors temperature, humidity, and pressure.
-                    </p>
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded mr-2">Intermediate</span>
-                      <span>Estimated time: 5 hours</span>
-                    </div>
-                    <Link 
-                      to="/projects/weather-station" 
-                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
-                    >
-                      Learn more
-                      <ArrowRight size={16} className="ml-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-4">
-                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
-                  <img 
-                    src="https://images.pexels.com/photos/8566472/pexels-photo-8566472.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                    alt="Plant Monitor" 
-                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">Smart Plant Monitor</h3>
-                    <p className="text-gray-600 mb-4">
-                      Build an automated plant monitoring system that tracks soil moisture and sunlight.
-                    </p>
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">Beginner</span>
-                      <span>Estimated time: 3 hours</span>
-                    </div>
-                    <Link 
-                      to="/projects/plant-monitor" 
-                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
-                    >
-                      Learn more
-                      <ArrowRight size={16} className="ml-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-4">
-                <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col md:flex-row">
-                  <img 
-                    src="https://images.pexels.com/photos/8566537/pexels-photo-8566537.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                    alt="Home Security" 
-                    className="w-full md:w-1/3 h-48 md:h-auto object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">Smart Security System</h3>
-                    <p className="text-gray-600 mb-4">
-                      Develop a DIY home security system with motion detection and mobile notifications.
-                    </p>
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded mr-2">Advanced</span>
-                      <span>Estimated time: 8 hours</span>
-                    </div>
-                    <Link 
-                      to="/projects/security-system" 
-                      className="text-[#00979D] font-medium hover:underline inline-flex items-center"
-                    >
-                      Learn more
-                      <ArrowRight size={16} className="ml-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </Slider>
+                ))}
+              </Slider>
+            )}
           </div>
         </div>
       </section>
