@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import transparentHero from '../assets/transparenthero.png';
 
 // Custom styles for Slick carousel dots
 const customDotStyles = `
@@ -138,35 +139,39 @@ const HomePage: React.FC = () => {
     <div className="space-y-16">
       <style>{customDotStyles}</style>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl overflow-hidden">
-        <div className="container mx-auto px-4 py-16 md:py-24">
-          <div className="max-w-2xl text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Start Your Arduino Journey Today
+      <section className="relative bg-white rounded-2xl overflow-hidden">
+        <div className="container mx-auto px-4 py-4 md:py-2 flex justify-between items-center">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-gray-900">
+              Start Your Arduino Journey Today with{' '}
+              <span className="text-[#00979D]">CircuitNest</span>
             </h1>
-            <p className="text-xl mb-8 opacity-90">
+            <p className="text-xl mb-8 text-gray-600">
               Everything you need to build amazing electronic projects.
               From starter kits to individual components, we've got you covered.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/kits"
-                className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium shadow-lg hover:bg-opacity-90 transition-all transform hover:-translate-y-1"
+                className="bg-[#00979D] text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:bg-blue-700 transition-all transform hover:-translate-y-1"
               >
                 Explore Starter Kits
               </Link>
               <button
                 onClick={scrollToFeaturedProjects}
-                className="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-10 transition-all"
+                className="bg-transparent border-2 border-[#00979D] text-[#00979D] px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-all"
               >
                 Browse Projects
               </button>
             </div>
           </div>
-        </div>
-        <div className="absolute right-0 bottom-0 w-1/3 h-full opacity-20 md:opacity-40">
-          {/* This would be a circuit board pattern or Arduino-themed graphic */}
-          <div className="bg-white/10 w-full h-full"></div>
+          <div className="hidden md:block w-1/2 relative">
+            <img
+              src={transparentHero}
+              alt="Arduino Hero"
+              className="object-contain w-full h-[500px]"
+            />
+          </div>
         </div>
       </section>
 
