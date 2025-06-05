@@ -140,7 +140,7 @@ const HomePage: React.FC = () => {
       <style>{customDotStyles}</style>
       {/* Hero Section */}
       <section className="relative bg-white rounded-2xl overflow-hidden">
-        <div className="container mx-auto px-4 py-4 md:py-2 flex justify-between items-center">
+        <div className="container mx-auto px-4 py-4 md:py-2 flex justify-between items-start">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-gray-900">
               Start Your Arduino Journey Today with{' '}
